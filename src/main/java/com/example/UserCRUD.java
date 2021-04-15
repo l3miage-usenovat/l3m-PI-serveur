@@ -75,6 +75,8 @@ public class UserCRUD {
     public User read(@PathVariable(value="userId") String id, HttpServletResponse response){
          try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
+
+
             ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+id+"'");
 
            
@@ -107,21 +109,36 @@ public class UserCRUD {
 
     @PostMapping("/{userId}")
     public User create(@PathVariable(value="userId") String id, @RequestBody User u, HttpServletResponse response){
+        
         try (Connection connection = dataSource.getConnection()){
-            Statement stmt = connection.createStatement();
-           int result= stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.login+"' ,"+u.age+")");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+id+"'");
 
-           
-             User userCreated= new User();
-             while(  rs.next()){
+             if(! u.login.equals(id) ){
+                response.setStatus(412);
+                return null;
+            }
+             
+            else if( read(u.login, response) != null){
+                response.setStatus(403);
+                return null;
+            }
+            else if (read(u.login, response) == null){
+
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.login+"' ,"+u.age+")");
+                ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+u.login+"'");
                 
+                User userCreated= new User();
+                rs.next();
                 userCreated.age = rs.getInt("age");
                 userCreated.login = rs.getString("login");
-                
+                response.setStatus(200);
+                return userCreated;
 
             }
-            return userCreated;
+            else{
+                return null;
+            }
+            
 
         }catch(Exception e){
             response.setStatus(500);
@@ -140,32 +157,28 @@ public class UserCRUD {
     @PutMapping("/{userId}")
     public User update(@PathVariable(value="userId") String id, @RequestBody User u, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate("UPDATE  chamis set age = "+u.age+" WHERE login = '"+u.login+"'");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+u.login+"'");
 
-           
-             User userCreated= new User();
-             if (rs.next()==false && id !=u.login){
+            if(! u.login.equals(id) ){
                 response.setStatus(412);
                 return null;
-            } 
-            else if(rs.next()== false){
-               response.setStatus(404);
-               return null;
+            }
+            else if (read(u.login, response) == null){
+                response.setStatus(403);
+                return null;
+            }
+            else if(read(u.login, response) != null){
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("UPDATE  chamis set age = "+u.age+" WHERE login = '"+u.login+"'");
+               ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+u.login+"'");
+
+               rs.next();
+               User userCreated= new User();
+               userCreated.age = rs.getInt("age");
+               userCreated.login = rs.getString("login");
+               return userCreated;
 
             }
-            
            
-            else if ( rs.next() && u.login == id){
-                
-                userCreated.age = rs.getInt("age");
-                userCreated.login = rs.getString("login");
-                return userCreated;
-                
-
-            }
-            
             else{
                 return null;
             }
@@ -189,8 +202,17 @@ public class UserCRUD {
     @DeleteMapping("/{userId}")
     void delete(@PathVariable(value="userId") String id, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
+
+            if(read(id, response) == null ){
+                response.setStatus(404);
+            }
+            else{
+                
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM  chamis WHERE login = '"+id+"'");
+
+            }
+
 
      
         }catch(Exception e){

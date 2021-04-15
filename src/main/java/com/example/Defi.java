@@ -1,12 +1,12 @@
 package com.example;
 
-import java.sql.Time;
 
 public class Defi {
     
     public String id;
     public String titre;
-    public Time dateDeCreation;
+    public String dateDeCreation;
+    public String auteur;
     public String description;
     
 }

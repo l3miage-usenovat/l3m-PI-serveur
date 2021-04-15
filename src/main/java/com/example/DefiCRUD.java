@@ -51,7 +51,8 @@ public class DefiCRUD {
                 Defi defi = new Defi();
                  defi.id= rs.getString("id");
                  defi.titre = rs.getString("titre");
-                 defi.dateDeCreation = rs.getTime("dateDeCreation");
+                 defi.dateDeCreation = rs.getString("dateDeCreation");
+                 defi.auteur = rs.getString("auteur");
                  defi.description = rs.getString("description");
                 L.add(defi);
 
@@ -80,14 +81,20 @@ public class DefiCRUD {
 
            
               Defi defi = new Defi();
-            while(rs.next()){
+            if(rs.next()){
                 defi.id= rs.getString("id");
                  defi.titre = rs.getString("titre");
-                 defi.dateDeCreation = rs.getTime("dateDeCreation");
-                 defi.description = rs.getString("description");;
+                 defi.dateDeCreation = rs.getString("dateDeCreation");
+                 defi.auteur = rs.getString("auteur");
+                 defi.description = rs.getString("description");
+                 return defi;
 
             }
-            return defi;
+            else{
+                response.setStatus(404);
+                return null;
+            }
+            
 
         }catch(Exception e){
             response.setStatus(500);
@@ -106,20 +113,35 @@ public class DefiCRUD {
     @PostMapping("/{defiId}")
     public Defi create(@PathVariable(value="defiId") String id, @RequestBody Defi d, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate("INSERT INTO defis VALUE ( '"+d.id+"' ,'"+d.titre+"','"+d.dateDeCreation+"'', ' "+d.description+"')");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+d.id+"'");
+
+            if(!d.id.equals(id)){
+                response.setStatus(412);
+                return null;
+            }
+            else if ( read(d.id, response) != null){
+                response.setStatus(403);
+                return null;
+            }
+            else if( read(d.id, response) == null){
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("INSERT INTO defis VALUES ( '"+d.id+"' ,'"+d.titre+"',TO_TIMESTAMP('"+d.dateDeCreation+"','YYYY-MM-DD HH:MI:SS'),'"+d.auteur+"', ' "+d.description+"')");
+                ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+d.id+"'");
 
            
-            Defi defi = new Defi();
-            while(rs.next()){
+                Defi defi = new Defi();
+                rs.next();
                 defi.id= rs.getString("id");
-                 defi.titre = rs.getString("titre");
-                 defi.dateDeCreation = rs.getTime("dateDeCreation");
-                 defi.description = rs.getString("description");;
+                defi.titre = rs.getString("titre");
+                defi.dateDeCreation = rs.getString("dateDeCreation");
+                defi.description = rs.getString("description");;
+                return defi;
 
             }
-            return defi;
+            else{
+                return null;
+            }
+            
+            
         }catch(Exception e){
             response.setStatus(500);
             try {
@@ -137,20 +159,36 @@ public class DefiCRUD {
     @PutMapping("/{defiId}")
     public Defi update(@PathVariable(value="defiId") String id, @RequestBody Defi d, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate("UPDATE  defis set titre = '"+d.titre+"', dateDeCreation ="+d.dateDeCreation+", description = '"+ d.description+"' WHERE id = '"+d.id+"'");
-            ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE login = '"+d.id+"'");
+
+
+            if(!d.id.equals(id)){
+                response.setStatus(412);
+                return null;
+            }
+            else if(read(id, response) == null){
+                response.setStatus(403);
+                return null;
+            }
+            else if(read(d.id, response) != null){
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("UPDATE  defis set titre = '"+d.titre+"', dateDeCreation = TO_TIMESTAMP('"+d.dateDeCreation+"','YYYY-MM-DD HH:MI:SS'), description = '"+ d.description+"', auteur = '"+d.auteur+"' WHERE id = '"+d.id+"'");
+                ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+d.id+"'");
 
            
-            Defi defi = new Defi();
-            while(rs.next()){
+                Defi defi = new Defi();
+                rs.next();
                 defi.id= rs.getString("id");
-                 defi.titre = rs.getString("titre");
-                 defi.dateDeCreation = rs.getTime("dateDeCreation");
-                 defi.description = rs.getString("description");;
+                defi.titre = rs.getString("titre");
+                defi.dateDeCreation = rs.getString("dateDeCreation");
+                defi.auteur = rs.getString("auteur");
+                defi.description = rs.getString("description");
+                return defi;
 
             }
-            return defi;
+            else {
+                return null;
+            }
+            
 
         }catch(Exception e){
             response.setStatus(500);
@@ -169,8 +207,15 @@ public class DefiCRUD {
     @DeleteMapping("/{defiId}")
     void delete(@PathVariable(value="defiId") String id, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
+            if(read(id, response) == null){
+                response.setStatus(404);
+            }
+            else{
+                
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("DELETE FROM  defi WHERE id = '"+id+"'");
+            stmt.executeUpdate("DELETE FROM  defis WHERE id = '"+id+"'");
+
+            }
 
      
         }catch(Exception e){
