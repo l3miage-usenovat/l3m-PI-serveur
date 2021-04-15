@@ -43,7 +43,7 @@ public class DefiCRUD {
     public ArrayList<Defi> allUsers(HttpServletResponse response) {
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELCT * FROM defis");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM defis");
 
             ArrayList<Defi> L = new ArrayList<Defi>();
 
@@ -76,7 +76,7 @@ public class DefiCRUD {
     public Defi read(@PathVariable(value="defiId") String id, HttpServletResponse response){
          try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELCT * FROM users WHERE id = '"+id+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+id+"'");
 
            
               Defi defi = new Defi();
@@ -107,8 +107,8 @@ public class DefiCRUD {
     public Defi create(@PathVariable(value="defiId") String id, @RequestBody Defi d, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("INSERT INTO defis VALUE ( '"+d.id+"' ,'"+d.titre+"',"+d.dateDeCreation+", ' "+d.description+"')");
-            ResultSet rs = stmt.executeQuery("SELCT * FROM defis WHERE id = '"+id+"'");
+            stmt.executeUpdate("INSERT INTO defis VALUE ( '"+d.id+"' ,'"+d.titre+"','"+d.dateDeCreation+"'', ' "+d.description+"')");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+d.id+"'");
 
            
             Defi defi = new Defi();
@@ -138,8 +138,8 @@ public class DefiCRUD {
     public Defi update(@PathVariable(value="defiId") String id, @RequestBody Defi d, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("UPDATE  defis set titre = '"+d.titre+"', dateDeCreation ="+d.dateDeCreation+", description = '"+ d.description+"' WHERE id = '"+id+"'");
-            ResultSet rs = stmt.executeQuery("SELCT * FROM defis WHERE login = '"+id+"'");
+            stmt.executeUpdate("UPDATE  defis set titre = '"+d.titre+"', dateDeCreation ="+d.dateDeCreation+", description = '"+ d.description+"' WHERE id = '"+d.id+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE login = '"+d.id+"'");
 
            
             Defi defi = new Defi();

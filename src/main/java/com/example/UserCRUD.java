@@ -44,7 +44,7 @@ public class UserCRUD {
     public ArrayList<User> allUsers(HttpServletResponse response) {
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELCT * FROM users");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis");
 
             ArrayList<User> L = new ArrayList<User>();
 
@@ -75,17 +75,21 @@ public class UserCRUD {
     public User read(@PathVariable(value="userId") String id, HttpServletResponse response){
          try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELCT * FROM users WHERE login = '"+id+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+id+"'");
 
            
              User userReaded= new User();
-            while(rs.next()){
+            if(rs.next()){
                 
                 userReaded.age = rs.getInt("age");
                 userReaded.login = rs.getString("login");
-
-            }
+                
             return userReaded;
+
+            }else{
+                response.setStatus(404);
+                return null;
+            }
 
         }catch(Exception e){
             response.setStatus(500);
@@ -105,15 +109,16 @@ public class UserCRUD {
     public User create(@PathVariable(value="userId") String id, @RequestBody User u, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("INSERT INTO users VALUE ( '"+u.login+"' ,"+u.age+")");
-            ResultSet rs = stmt.executeQuery("SELCT * FROM users WHERE login = '"+id+"'");
+           int result= stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.login+"' ,"+u.age+")");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+id+"'");
 
            
              User userCreated= new User();
-            while(rs.next()){
+             while(  rs.next()){
                 
                 userCreated.age = rs.getInt("age");
                 userCreated.login = rs.getString("login");
+                
 
             }
             return userCreated;
@@ -136,18 +141,36 @@ public class UserCRUD {
     public User update(@PathVariable(value="userId") String id, @RequestBody User u, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("UPDATE  users set age = "+u.age+" WHERE login = '"+id+"'");
-            ResultSet rs = stmt.executeQuery("SELCT * FROM users WHERE login = '"+id+"'");
+            stmt.executeUpdate("UPDATE  chamis set age = "+u.age+" WHERE login = '"+u.login+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+u.login+"'");
 
            
              User userCreated= new User();
-            while(rs.next()){
+             if (rs.next()==false && id !=u.login){
+                response.setStatus(412);
+                return null;
+            } 
+            else if(rs.next()== false){
+               response.setStatus(404);
+               return null;
+
+            }
+            
+           
+            else if ( rs.next() && u.login == id){
                 
                 userCreated.age = rs.getInt("age");
                 userCreated.login = rs.getString("login");
+                return userCreated;
+                
 
             }
-            return userCreated;
+            
+            else{
+                return null;
+            }
+            
+                       
 
         }catch(Exception e){
             response.setStatus(500);
@@ -167,7 +190,7 @@ public class UserCRUD {
     void delete(@PathVariable(value="userId") String id, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("DELETE FROM  users WHERE login = '"+id+"'");
+            stmt.executeUpdate("DELETE FROM  chamis WHERE login = '"+id+"'");
 
      
         }catch(Exception e){
