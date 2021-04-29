@@ -1,0 +1,37 @@
+//=========================================================================
+//                      Modèle de glossaire
+//-------------------------------------------------------------------------
+// Ce modèle de glossaire est exprimé en GlossaryScript
+// voir https://modelscript.readthedocs.io/en/latest/languages/glossaries/index.html
+//=========================================================================
+
+glossary model CyberChaMis
+
+CyberChaMis
+    | Prototype de site web à réaliser pour le compte `GreCha` pour 
+    | Concevoir, la valider et cartographier des `Chamis`. 
+
+GreCha 
+    | GreCha est une association 1901 à but non lucratif. 
+    | Ses statuts précisent que l'un de ses objectifs est 
+    | l'organisation de challenges solidaires et locaux à 
+    | la métropole grenobloise.  GreCha est une contraction 
+    | du titre de l'association les Challenges Grenoblois, 
+    | Collaboratifs et Solidaires
+
+Defi
+    | Description de defis à relever.
+
+Visite
+    | Action de se rendre sur le lieu d'un `defis`
+
+Visiteur
+    | Personne effectuant une `Visite`
+
+Chamis
+    | Personne appartenant à la communauté `chamis` de grenoble
+
+Materiels
+    | Photos, vidéos ou des traces permettant d'avoir des `defi`s plus interessant
+
+
