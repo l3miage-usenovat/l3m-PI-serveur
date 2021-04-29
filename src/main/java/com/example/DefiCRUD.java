@@ -54,6 +54,16 @@ public class DefiCRUD {
                  defi.dateDeCreation = rs.getString("dateDeCreation");
                  defi.auteur = rs.getString("auteur");
                  defi.description = rs.getString("description");
+                 defi.type = rs.getString("type");
+                 defi.dateDeModification = rs.getString("datedemodification");
+                 defi.arret = rs.getString("arret");
+                 defi.distanciel = rs.getString("distanciel");
+                 defi.motCles = rs.getString("motcles");
+                 defi.points = rs.getInt("points");
+                 defi.duree = rs.getString("duree");
+                 defi.indices = rs.getString("indices");
+                 defi.evaluation = rs.getString("evaluation");
+                 defi.epilogue = rs.getString("epilogue");
                 L.add(defi);
 
             }
@@ -87,6 +97,16 @@ public class DefiCRUD {
                  defi.dateDeCreation = rs.getString("dateDeCreation");
                  defi.auteur = rs.getString("auteur");
                  defi.description = rs.getString("description");
+                 defi.type = rs.getString("type");
+                 defi.dateDeModification = rs.getString("datedemodification");
+                 defi.arret = rs.getString("arret");
+                 defi.distanciel = rs.getString("distanciel");
+                 defi.motCles = rs.getString("motcles");
+                 defi.points = rs.getInt("points");
+                 defi.duree = rs.getString("duree");
+                 defi.indices = rs.getString("indices");
+                 defi.evaluation = rs.getString("evaluation");
+                 defi.epilogue = rs.getString("epilogue");
                  return defi;
 
             }
@@ -124,7 +144,9 @@ public class DefiCRUD {
             }
             else if( read(d.id, response) == null){
                 Statement stmt = connection.createStatement();
-                stmt.executeUpdate("INSERT INTO defis VALUES ( '"+d.id+"' ,'"+d.titre+"',TO_TIMESTAMP('"+d.dateDeCreation+"','YYYY-MM-DD HH:MI:SS'),'"+d.auteur+"', ' "+d.description+"')");
+                stmt.executeUpdate("INSERT INTO defis VALUES ( '"+d.id+"' ,'"+d.titre+"',TO_TIMESTAMP('"+d.dateDeCreation+"','YYYY-MM-DD HH:MI:SS'),'"+d.auteur+"', '"+d.description 
+                +"', '"+d.type+"',TO_TIMESTAMP('"+d.dateDeModification+"','YYYY-MM-DD HH:MI:SS'),'"+d.arret+"', '"+d.distanciel+"','"+d.motCles+"',"+d.points+", '"+d.duree+"', '"+
+                d.indices+"','"+d.evaluation+"','"+d.epilogue+"')");
                 ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+d.id+"'");
 
            
@@ -133,7 +155,17 @@ public class DefiCRUD {
                 defi.id= rs.getString("id");
                 defi.titre = rs.getString("titre");
                 defi.dateDeCreation = rs.getString("dateDeCreation");
-                defi.description = rs.getString("description");;
+                defi.description = rs.getString("description");
+                defi.type = rs.getString("type");
+                defi.dateDeModification = rs.getString("datedemodification");
+                defi.arret = rs.getString("arret");
+                defi.distanciel = rs.getString("distanciel");
+                defi.motCles = rs.getString("motcles");
+                defi.points = rs.getInt("points");
+                defi.duree = rs.getString("duree");
+                defi.indices = rs.getString("indices");
+                defi.evaluation = rs.getString("evaluation");
+                defi.epilogue = rs.getString("epilogue");
                 return defi;
 
             }
@@ -171,7 +203,9 @@ public class DefiCRUD {
             }
             else if(read(d.id, response) != null){
                 Statement stmt = connection.createStatement();
-                stmt.executeUpdate("UPDATE  defis set titre = '"+d.titre+"', dateDeCreation = TO_TIMESTAMP('"+d.dateDeCreation+"','YYYY-MM-DD HH:MI:SS'), description = '"+ d.description+"', auteur = '"+d.auteur+"' WHERE id = '"+d.id+"'");
+                stmt.executeUpdate("UPDATE  defis set titre = '"+d.titre+"', dateDeCreation = TO_TIMESTAMP('"+d.dateDeCreation+"','YYYY-MM-DD HH:MI:SS'), description = '"+ d.description+"', auteur = '"+d.auteur
+                +"', type = '"+d.type+"', datedemodification = TO_TIMESTAMP('"+d.dateDeModification+"','YYYY-MM-DD HH:MI:SS'), arret = '"+d.arret+"', distanciel = "+d.distanciel+"', motcles = '"+d.motCles+
+                "', point = "+d.points+", duree = '"+d.duree+"', indices = '"+d.indices+"', evaluation = '"+d.evaluation+"', epilogue = '"+d.epilogue+"' WHERE id = '"+d.id+"'");
                 ResultSet rs = stmt.executeQuery("SELECT * FROM defis WHERE id = '"+d.id+"'");
 
            
@@ -182,6 +216,16 @@ public class DefiCRUD {
                 defi.dateDeCreation = rs.getString("dateDeCreation");
                 defi.auteur = rs.getString("auteur");
                 defi.description = rs.getString("description");
+                defi.type = rs.getString("type");
+                defi.dateDeModification = rs.getString("datedemodification");
+                defi.arret = rs.getString("arret");
+                defi.distanciel = rs.getString("distanciel");
+                defi.motCles = rs.getString("motcles");
+                defi.points = rs.getInt("points");
+                defi.duree = rs.getString("duree");
+                defi.indices = rs.getString("indices");
+                defi.evaluation = rs.getString("evaluation");
+                defi.epilogue = rs.getString("epilogue");
                 return defi;
 
             }

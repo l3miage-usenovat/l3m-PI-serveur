@@ -35,23 +35,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/users")
-public class UserCRUD {
+public class ChamiCRUD {
 
     @Autowired
     private DataSource dataSource;
 
     @GetMapping("/")
-    public ArrayList<User> allUsers(HttpServletResponse response) {
+    public ArrayList<Chami> allUsers(HttpServletResponse response) {
         try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM chamis");
 
-            ArrayList<User> L = new ArrayList<User>();
+            ArrayList<Chami> L = new ArrayList<Chami>();
 
             while(rs.next()){
-                User u = new User();
+                Chami u = new Chami();
                 u.age = rs.getInt("age");
-                u.login = rs.getString("login");
+                u.pseudo = rs.getString("pseudo");
+                u.description = rs.getString("description");
+                u.ville   = rs.getString("ville");
                 L.add(u);
 
             }
@@ -72,19 +74,21 @@ public class UserCRUD {
     }
 
     @GetMapping("/{userId}")
-    public User read(@PathVariable(value="userId") String id, HttpServletResponse response){
+    public Chami read(@PathVariable(value="userId") String id, HttpServletResponse response){
          try (Connection connection = dataSource.getConnection()){
             Statement stmt = connection.createStatement();
 
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+id+"'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE pseudo = '"+id+"'");
 
            
-             User userReaded= new User();
+             Chami userReaded= new Chami();
             if(rs.next()){
                 
                 userReaded.age = rs.getInt("age");
-                userReaded.login = rs.getString("login");
+                userReaded.pseudo = rs.getString("pseudo");
+                userReaded.ville = rs.getString("ville");
+                userReaded.description = rs.getString("description");
                 
             return userReaded;
 
@@ -108,29 +112,32 @@ public class UserCRUD {
     }
 
     @PostMapping("/{userId}")
-    public User create(@PathVariable(value="userId") String id, @RequestBody User u, HttpServletResponse response){
+    public Chami create(@PathVariable(value="userId") String id, @RequestBody Chami u, HttpServletResponse response){
         
         try (Connection connection = dataSource.getConnection()){
 
-             if(! u.login.equals(id) ){
+             if(! u.pseudo.equals(id) ){
                 response.setStatus(412);
                 return null;
             }
              
-            else if( read(u.login, response) != null){
+            else if( read(u.pseudo, response) != null){
                 response.setStatus(403);
                 return null;
             }
-            else if (read(u.login, response) == null){
+            else if (read(u.pseudo, response) == null){
 
                 Statement stmt = connection.createStatement();
-                stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.login+"' ,"+u.age+")");
-                ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+u.login+"'");
+                stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.pseudo+"' ,"+u.age+"'"+u.ville+"'"+
+                                                                u.description+"')");
+                ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE pseudo = '"+u.pseudo+"'");
                 
-                User userCreated= new User();
+                Chami userCreated= new Chami();
                 rs.next();
                 userCreated.age = rs.getInt("age");
-                userCreated.login = rs.getString("login");
+                userCreated.pseudo = rs.getString("pseudo");
+                userCreated.ville = rs.getString("ville");
+                userCreated.description = rs.getString("description");
                 response.setStatus(200);
                 return userCreated;
 
@@ -155,26 +162,29 @@ public class UserCRUD {
     }
 
     @PutMapping("/{userId}")
-    public User update(@PathVariable(value="userId") String id, @RequestBody User u, HttpServletResponse response){
+    public Chami update(@PathVariable(value="userId") String id, @RequestBody Chami u, HttpServletResponse response){
         try (Connection connection = dataSource.getConnection()){
 
-            if(! u.login.equals(id) ){
+            if(! u.pseudo.equals(id) ){
                 response.setStatus(412);
                 return null;
             }
-            else if (read(u.login, response) == null){
+            else if (read(u.pseudo, response) == null){
                 response.setStatus(403);
                 return null;
             }
-            else if(read(u.login, response) != null){
+            else if(read(u.pseudo, response) != null){
                 Statement stmt = connection.createStatement();
-                stmt.executeUpdate("UPDATE  chamis set age = "+u.age+" WHERE login = '"+u.login+"'");
-               ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE login = '"+u.login+"'");
+                stmt.executeUpdate("UPDATE  chamis set age = "+u.age+", ville = '"+u.ville+"' , description = '"+u.description+ 
+                "' WHERE pseudo = '"+u.pseudo+"'");
+               ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE pseudo = '"+u.pseudo+"'");
 
                rs.next();
-               User userCreated= new User();
+               Chami userCreated= new Chami();
                userCreated.age = rs.getInt("age");
-               userCreated.login = rs.getString("login");
+               userCreated.pseudo = rs.getString("pseudo");
+               userCreated.ville =  rs.getString("ville");
+               userCreated.description = rs.getString("description");
                return userCreated;
 
             }
@@ -209,7 +219,7 @@ public class UserCRUD {
             else{
                 
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("DELETE FROM  chamis WHERE login = '"+id+"'");
+            stmt.executeUpdate("DELETE FROM  chamis WHERE pseudo = '"+id+"'");
 
             }
 
