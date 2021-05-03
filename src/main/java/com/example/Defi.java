@@ -18,6 +18,9 @@ public class Defi {
     public String indices;
     public String evaluation;
     public String epilogue;
+    public double latitude;
+    public double longitude;
+
 
     
 }

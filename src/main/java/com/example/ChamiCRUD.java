@@ -128,7 +128,7 @@ public class ChamiCRUD {
             else if (read(u.pseudo, response) == null){
 
                 Statement stmt = connection.createStatement();
-                stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.pseudo+"' ,"+u.age+"'"+u.ville+"'"+
+                stmt.executeUpdate("INSERT INTO chamis VALUES ( '"+u.pseudo+"' ,"+u.age+",'"+u.ville+"','"+
                                                                 u.description+"')");
                 ResultSet rs = stmt.executeQuery("SELECT * FROM chamis WHERE pseudo = '"+u.pseudo+"'");
                 
