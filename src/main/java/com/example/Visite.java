@@ -1,11 +1,11 @@
 package com.example;
 
 public class Visite {
-	private String visiteId;
-	private String defiId;
+	private String visiteid;
+	private String defiid;
 	private String visiteur;
-	private String dateVisite;
-	private String modeVisite;
+	private String datevisite;
+	private String modevisite;
 	private String status;
 	private int score;
 	private int temps;
@@ -31,12 +31,12 @@ public class Visite {
 
 
 	public String getVisiteId() {
-		return visiteId;
+		return visiteid;
 	}
 
 
 	public void setVisiteId(String visiteId) {
-		this.visiteId = visiteId;
+		this.visiteid = visiteId;
 	}
 
 
@@ -51,32 +51,32 @@ public class Visite {
 
 
 	public String getModeVisite() {
-		return modeVisite;
+		return modevisite;
 	}
 
 
 	public void setModeVisite(String modeVisite) {
-		this.modeVisite = modeVisite;
+		this.modevisite = modeVisite;
 	}
 
 
 	public String getDefiId() {
-		return defiId;
+		return defiid;
 	}
 
 
 	public void setDefiId(String defiId) {
-		this.defiId = defiId;
+		this.defiid = defiId;
 	}
 
 
 	public String getDateVisite() {
-		return dateVisite;
+		return datevisite;
 	}
 
 
 	public void setDateVisite(String dateVisite) {
-		this.dateVisite = dateVisite;
+		this.datevisite = dateVisite;
 	}
 
 
